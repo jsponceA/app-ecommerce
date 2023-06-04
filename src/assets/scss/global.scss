@@ -1,0 +1,25 @@
+@import "bootstrap/scss/bootstrap";
+
+#root {
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-img img {
+    width: 5rem;
+}
+
+.header-menu-link:hover {
+    color: var(--bs-orange) !important;
+}
+
+.btn-login {
+    background-color: var(--bs-orange) !important;
+}
+
+.item-link-footer:hover {
+    color: var(--bs-orange) !important;
+    border-color: var(--bs-orange) !important;
+}
