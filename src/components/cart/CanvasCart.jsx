@@ -37,9 +37,6 @@ const CanvasCart = () => {
     });
   }, []);
 
-  useEffect(() => {
-    getListCart();
-  }, []);
   return (
     <div
       className="offcanvas offcanvas-end"
