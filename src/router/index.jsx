@@ -35,6 +35,10 @@ const routes = createBrowserRouter([
         element: <ProtectedRoute element={ProfileEdit} />,
       },
       {
+        path: "products",
+        element: <HomeIndex />,
+      },
+      {
         path: "product/:id",
         element: <ProtectedRoute element={ProductShow} />,
       },

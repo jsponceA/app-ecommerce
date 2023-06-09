@@ -1,8 +1,23 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import CardProduct from "../../components/cart/CardProduct";
+import useProduct from "../../hooks/product/useProduct";
 
-const ProductShow = (props) => {
+const ProductShow = () => {
+  const { id } = useParams();
+  const { getProductById, product, products, getListProductsRelation } =
+    useProduct();
+
+  useEffect(() => {
+    getProductById(id);
+  }, [id]);
+
+  useEffect(() => {
+    if (product.category) {
+      getListProductsRelation(product.category.id);
+    }
+  }, [product]);
+
   return (
     <div className="container">
       <div className="row">
@@ -15,7 +30,7 @@ const ProductShow = (props) => {
                 </Link>
               </li>
               <li className="breadcrumb-item active" aria-current="page">
-                Samsung Galaxy S22
+                {product.title}
               </li>
             </ol>
           </nav>
@@ -49,27 +64,14 @@ const ProductShow = (props) => {
               ></button>
             </div>
             <div className="carousel-inner">
-              <div className="carousel-item active">
-                <img
-                  src="https://e-commerce-api-v2.academlo.tech/uploads/b.jpg"
-                  className="d-block"
-                  alt="..."
-                />
-              </div>
-              <div className="carousel-item">
-                <img
-                  src="https://e-commerce-api-v2.academlo.tech/uploads/b.jpg"
-                  className="d-block"
-                  alt="..."
-                />
-              </div>
-              <div className="carousel-item">
-                <img
-                  src="https://e-commerce-api-v2.academlo.tech/uploads/b.jpg"
-                  className="d-block"
-                  alt="..."
-                />
-              </div>
+              {product.images?.map((img, index) => (
+                <div
+                  key={img.id}
+                  className={`carousel-item ${index === 0 && "active"}`}
+                >
+                  <img src={img.url} className="d-block" alt="..." />
+                </div>
+              ))}
             </div>
             <button
               className="carousel-control-prev"
@@ -98,18 +100,11 @@ const ProductShow = (props) => {
           </div>
         </div>
         <div className="col-md-6 col-12">
-          <p>Samsung</p>
-          <p>Samsung Galaxy S22</p>
-          <p>
-            Smartphone, Factory Unlocked Android Cell Phone, 256GB, 8K Camera &
-            Video, Brightest Display, Long Battery Life, Fast 4nm Processor, US
-            Version. 8K SUPER STEADY VIDEO: Shoot videos that rival how epic
-            your life is with stunning 8K recording, the highest recording
-            resolution available on a smartphone; Video captured is effortlessly
-            smooth, thanks to Auto Focus Video Stabilization on Galaxy S22*
-          </p>
+          <p>{product.category?.name}</p>
+          <p>{product.title}</p>
+          <p>{product.description}</p>
           <div className="d-flex">
-            <p>Price: $8.500</p>
+            <p>Price: $ {product.price}</p>
             <div className="mx-auto">
               <label htmlFor="">Cantidad</label>
               <div className="input-group input-group-sm">
@@ -145,13 +140,11 @@ const ProductShow = (props) => {
             PRODUCTOS SIMILARES
           </p>
         </div>
-        {Array(10)
-          .fill(0)
-          .map((item, index) => (
-            <div key={index} className="col-md-4 my-2">
-              <CardProduct id={index} />
-            </div>
-          ))}
+        {products.map((product) => (
+          <div key={product.id} className="col-md-4 my-2">
+            <CardProduct product={product} />
+          </div>
+        ))}
       </div>
     </div>
   );

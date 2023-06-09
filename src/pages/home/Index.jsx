@@ -1,6 +1,57 @@
+import { useEffect } from "react";
 import CardProduct from "../../components/cart/CardProduct";
+import useProduct from "../../hooks/product/useProduct";
+import { Link } from "react-router-dom";
 
 const HomeIndex = () => {
+  const {
+    paramsProducts,
+    setParamsProducts,
+    products,
+    categories,
+    loaderGetProducts,
+    getListProducts,
+    getListCategories,
+    filterPrice,
+    setFilterPrice,
+    filterProductsPrice,
+  } = useProduct();
+
+  const handleSubmitProducts = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    paramsProducts.set("title", formData.get("title"));
+    setParamsProducts(paramsProducts);
+  };
+
+  const handleFilterCategory = (e, id) => {
+    e.preventDefault();
+    paramsProducts.set("categoryId", id);
+    setParamsProducts(paramsProducts);
+  };
+
+  const clearFilters = () => {
+    paramsProducts.delete("title");
+    paramsProducts.delete("categoryId");
+    setParamsProducts(paramsProducts);
+    setFilterPrice({
+      start: "",
+      end: "",
+    });
+  };
+
+  useEffect(() => {
+    getListCategories();
+  }, []);
+
+  useEffect(() => {
+    if (paramsProducts.get("categoryId") || paramsProducts.get("title")) {
+      getListProducts();
+    } else {
+      getListProducts();
+    }
+  }, [paramsProducts]);
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -32,6 +83,13 @@ const HomeIndex = () => {
                       $ Desde
                     </span>
                     <input
+                      onChange={(e) =>
+                        setFilterPrice((prev) => ({
+                          ...prev,
+                          start: e.target.value,
+                        }))
+                      }
+                      value={filterPrice.start}
                       type="number"
                       min={0}
                       step="any"
@@ -45,6 +103,13 @@ const HomeIndex = () => {
                       $ Hasta
                     </span>
                     <input
+                      onChange={(e) =>
+                        setFilterPrice((prev) => ({
+                          ...prev,
+                          end: e.target.value,
+                        }))
+                      }
+                      value={filterPrice.end}
                       type="number"
                       min={0}
                       step="any"
@@ -55,12 +120,17 @@ const HomeIndex = () => {
                   </div>
                   <div className="d-flex justify-content-between">
                     <button
+                      onClick={clearFilters}
                       type="button"
                       className="btn btn-outline-danger btn-sm"
                     >
                       <i className="bx bx-brush"></i> LIMPIAR
                     </button>
-                    <button type="button" className="btn btn-orange btn-sm">
+                    <button
+                      onClick={() => filterProductsPrice()}
+                      type="button"
+                      className="btn btn-orange btn-sm"
+                    >
                       <i className="bx bx-filter"></i> APLICAR
                     </button>
                   </div>
@@ -87,26 +157,18 @@ const HomeIndex = () => {
               >
                 <div className="accordion-body">
                   <div className="d-flex flex-column">
-                    <a href="#" className="text-decoration-none link-secondary">
-                      Smart Tvs
-                    </a>
-                    <hr className="my-1 border-secondary-subtle" />
-                    <a href="#" className="text-decoration-none link-secondary">
-                      Smart Tvs
-                    </a>
-                    <hr className="my-1 border-secondary-subtle" />
-                    <a href="#" className="text-decoration-none link-secondary">
-                      Smart Tvs
-                    </a>
-                    <hr className="my-1 border-secondary-subtle" />
-                    <a href="#" className="text-decoration-none link-secondary">
-                      Smart Tvs
-                    </a>
-                    <hr className="my-1 border-secondary-subtle" />
-                    <a href="#" className="text-decoration-none link-secondary">
-                      Smart Tvs
-                    </a>
-                    <hr className="my-1 border-secondary-subtle" />
+                    {categories.map((cat) => (
+                      <div key={cat.id}>
+                        <a
+                          onClick={(e) => handleFilterCategory(e, cat.id)}
+                          href="#"
+                          className="text-decoration-none link-secondary"
+                        >
+                          {cat.name}
+                        </a>
+                        <hr className="my-1 border-secondary-subtle" />
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -115,33 +177,28 @@ const HomeIndex = () => {
         </div>
         <div className="col-md-9 col-12">
           <div className="row">
-            <div className="col-md-12">
-              <div className="input-group input-group-lg mb-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Buscar por nombre de producto"
-                  aria-label="Example text with button addon"
-                  aria-describedby="button-addon1"
-                />
-                <button
-                  className="btn bg-secondary-subtle"
-                  type="button"
-                  id="button-addon1"
-                >
-                  <i className="bx bx-search"></i>
-                </button>
+            <form onSubmit={handleSubmitProducts}>
+              <div className="col-md-12">
+                <div className="input-group input-group-lg mb-3">
+                  <input
+                    name="title"
+                    type="text"
+                    className="form-control"
+                    placeholder="Buscar por nombre de producto"
+                  />
+                  <button className="btn bg-secondary-subtle" type="submit">
+                    <i className="bx bx-search"></i>
+                  </button>
+                </div>
               </div>
-            </div>
+            </form>
           </div>
           <div className="row">
-            {Array(50)
-              .fill(0)
-              .map((item, index) => (
-                <div key={index} className="col-md-4 my-2">
-                  <CardProduct id={index} />
-                </div>
-              ))}
+            {products.map((product) => (
+              <div key={product.id} className="col-md-4 my-2">
+                <CardProduct product={product} />
+              </div>
+            ))}
           </div>
         </div>
       </div>
