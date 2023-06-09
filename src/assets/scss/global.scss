@@ -1,5 +1,12 @@
 @import "bootstrap/scss/bootstrap";
 
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
 html {
     scroll-behavior: smooth;
 }
@@ -7,30 +14,6 @@ html {
 body {
     overflow: auto;
 }
-
-#root {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.header-img img {
-    width: 5rem;
-}
-
-.header-menu-link:hover {
-    color: var(--bs-orange) !important;
-}
-
-.btn-login {
-    background-color: var(--bs-orange) !important;
-}
-
-.item-link-footer:hover {
-    color: var(--bs-orange) !important;
-    border-color: var(--bs-orange) !important;
-}
-
 
 /* Estilos adicionales para navegadores antiguos */
 body::-webkit-scrollbar {
@@ -44,4 +27,50 @@ body::-webkit-scrollbar-thumb {
 
 body::-webkit-scrollbar-track {
     background-color: #f1f1f1;
+}
+
+
+
+.header-img img {
+    width: 5rem;
+}
+
+.header-menu-link:hover {
+    color: var(--bs-orange) !important;
+}
+
+.active {
+    color: var(--bs-orange) !important;
+}
+
+.btn-login,
+.btn-register {
+    background-color: var(--bs-orange) !important;
+}
+
+.btn-orange {
+    background-color: var(--bs-orange) !important;
+    color: white;
+}
+
+.btn-orange:hover {
+    color: white;
+}
+
+.item-link-footer:hover {
+    color: var(--bs-orange) !important;
+    border-color: var(--bs-orange) !important;
+}
+
+.product-card-image {
+    width: 80%;
+    height: 200px;
+    object-fit: contain;
+}
+
+.product-card-image .over {
+    background: #fff;
+    opacity: 0;
+    position: absolute;
+    transition: .8s;
 }

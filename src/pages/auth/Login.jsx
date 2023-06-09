@@ -1,5 +1,20 @@
+import { Link } from "react-router-dom";
 import Logo from "../../assets/img/logo.png";
-const Login = ({}) => {
+import useAuth from "../../hooks/auth/useAuth";
+const Login = () => {
+  const {
+    loginRegister,
+    loginHandleSubmit,
+    loginErrors,
+    loaderResponseLogin,
+    handleLogin,
+  } = useAuth();
+
+  const onSubmitLogin = async (dataForm, e) => {
+    e.preventDefault();
+    await handleLogin(dataForm);
+  };
+
   return (
     <div className="container-fluid">
       <div className="row mt-5 d-flex justify-content-center">
@@ -7,7 +22,7 @@ const Login = ({}) => {
           <div className="card border-white shadow-lg">
             <div className="card-body">
               <p className="fw-bold fs-5 text-secondary text-center">
-                Bienvenido! Ingrese su correo y su contraseña para continuar
+                INICIO DE SESIÓN
               </p>
               <div className="text-center">
                 <img
@@ -17,48 +32,76 @@ const Login = ({}) => {
                   alt="logo.png"
                 />
               </div>
-              <form action="">
-                <div className="row gap-2">
+              <form onSubmit={loginHandleSubmit(onSubmitLogin)}>
+                <div className="row gap-3">
                   <div className="col-md-12">
-                    <div className="form-floating">
+                    <div className="input-group flex-nowrap">
+                      <span className="input-group-text">
+                        <i className="bx bx-user-check bx-sm"></i>
+                      </span>
                       <input
-                        type="email"
                         className="form-control"
-                        required
-                        maxLength={255}
-                        id="email"
-                        placeholder="example@example.com"
+                        type="text"
+                        placeholder="Example@correo.com"
+                        {...loginRegister("email")}
                       />
-                      <label htmlFor="email">Correo</label>
                     </div>
+                    <p className="my-0 text-danger">
+                      {loginErrors.email?.message}
+                    </p>
                   </div>
                   <div className="col-md-12">
-                    <div className="form-floating">
+                    <div className="input-group flex-nowrap">
+                      <span className="input-group-text">
+                        <i className="bx bx-lock-open bx-sm"></i>
+                      </span>
                       <input
-                        type="password"
                         className="form-control"
-                        id="password"
-                        required
-                        maxLength={255}
-                        placeholder="********"
+                        type="password"
+                        placeholder="*********"
+                        {...loginRegister("password")}
                       />
-                      <label htmlFor="password">Contraseña</label>
                     </div>
+                    <p className="my-0 text-danger">
+                      {loginErrors.password?.message}
+                    </p>
                   </div>
                   <div className="col-md-12 text-end">
                     <a href="#">¿Olvidaste tu Contraseña?</a>
                   </div>
                   <div className="col-md-12 d-grid gap-1">
-                    <button className="btn btn-login text-white">
-                      <i className="bx bx-log-in"> INGRESAR</i>
-                    </button>
+                    {!loaderResponseLogin ? (
+                      <button
+                        type="submit"
+                        className="btn btn-login text-white"
+                      >
+                        <i className="bx bx-log-in"> INGRESAR</i>
+                      </button>
+                    ) : (
+                      <button
+                        className="btn btn-login text-white"
+                        type="button"
+                        disabled
+                      >
+                        <span
+                          className="spinner-border spinner-border-sm"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                        PROCESANDO...
+                      </button>
+                    )}
+
                     <hr className="my-2" />
-                    <button className="btn btn-danger text-white">
+                    {/* <button type="button" className="btn btn-danger text-white">
                       <i className="bx bxl-google"> GOOGLE</i>
                     </button>
-                    <button className="btn btn-primary text-white">
+                    <button
+                      type="button"
+                      className="btn btn-primary text-white"
+                    >
                       <i className="bx bxl-facebook-circle"> FACEBOOK</i>
-                    </button>
+                    </button> */}
                   </div>
                   <div className="col-md-12">
                     <p
@@ -66,9 +109,12 @@ const Login = ({}) => {
                       style={{ fontSize: ".85rem" }}
                     >
                       ¿Aún no tienes una cuenta?{" "}
-                      <a href="#" className="link-primary text-decoration-none">
+                      <Link
+                        to={"/register"}
+                        className="link-primary text-decoration-none"
+                      >
                         Registrate
-                      </a>
+                      </Link>
                     </p>
                   </div>
                 </div>
