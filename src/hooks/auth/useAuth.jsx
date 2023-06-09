@@ -41,7 +41,7 @@ const useAuth = () => {
       dispatch(setToken(token));
       dispatch(setUser(user));
       toast.success(`Bienvenido usuario ${user.firstName} ${user.lastName}`);
-      navigate("/cart");
+      navigate("/mi-profile");
     } catch (error) {
       toast.error(error.response?.data?.error);
     } finally {

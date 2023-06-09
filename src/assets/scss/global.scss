@@ -13,6 +13,9 @@ html {
 
 body {
     overflow: auto;
+    font-family: 'Fjalla One', sans-serif;
+    font-family: 'Inter', sans-serif;
+    font-family: 'Roboto Condensed', sans-serif;
 }
 
 /* Estilos adicionales para navegadores antiguos */
@@ -73,4 +76,22 @@ body::-webkit-scrollbar-track {
     opacity: 0;
     position: absolute;
     transition: .8s;
+}
+
+.carousel-item img {
+    width: 80%;
+    height: 200px;
+    object-fit: contain;
+}
+
+.table-pruchase-item-img {
+    width: 120px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.offcanvas-item-img {
+    width: 90px;
+    height: 80px;
+    object-fit: contain;
 }

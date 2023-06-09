@@ -28,12 +28,15 @@ const Header = () => {
             </NavLink>
 
             {authChecked && (
-              <NavLink
-                to={"/cart"}
+              <a
+                data-bs-toggle="offcanvas"
+                href="#offcanvasExample"
+                role="button"
+                aria-controls="offcanvasExample"
                 className="text-decoration-none link-light header-menu-link"
               >
                 <i className="bx bx-cart"></i>CARRITO
-              </NavLink>
+              </a>
             )}
             {!authChecked && (
               <Link
@@ -68,9 +71,9 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <Link className="dropdown-item" to={"/purchases"}>
                       <i className="bx bx-archive"></i> Mis Compras
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a className="dropdown-item" href="#">

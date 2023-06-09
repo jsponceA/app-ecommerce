@@ -4,16 +4,31 @@ const ProfileEdit = () => {
   const {
     editUserRegister,
     editUserHandleSubmit,
+    setEditUserErrors,
     editUserErrors,
     initialDataEditUser,
     loaderInitialDataEditUser,
     loaderResponseEditUser,
     handleEditUser,
+    dataCurrentUser,
+    setDataCurrentUser,
   } = useEditProfile();
 
-  const onSubmitRegister = async (dataForm, e) => {
+  const onSubmitRegister = async (e) => {
     e.preventDefault();
-    await handleEditUser(dataForm);
+    await handleEditUser();
+  };
+
+  const handleChangeInput = (e) => {
+    const { name, value } = e.target;
+    setDataCurrentUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    setEditUserErrors((prev) => ({
+      ...prev,
+      [name]: null,
+    }));
   };
 
   useEffect(() => {
@@ -29,7 +44,15 @@ const ProfileEdit = () => {
               <p className="fw-bold fs-5 text-secondary text-center">
                 ACTUALIZAR MI INFORMACIÓN PERSONAL
               </p>
-              <form onSubmit={editUserHandleSubmit(onSubmitRegister)}>
+              <div className="text-center my-0">
+                <img
+                  className="rounded-circle"
+                  style={{ width: "150px" }}
+                  src="https://github.com/mdo.png"
+                  alt=""
+                />
+              </div>
+              <form onSubmit={onSubmitRegister}>
                 <div className="row row-gap-2">
                   <div className="col-md-6 col-12">
                     <label htmlFor="email">Correo:</label>
@@ -41,8 +64,10 @@ const ProfileEdit = () => {
                         className="form-control"
                         type="text"
                         placeholder="Example@correo.com"
-                        defaultValue
-                        {...editUserRegister("email")}
+                        id="email"
+                        name="email"
+                        value={dataCurrentUser.email || ""}
+                        onChange={handleChangeInput}
                       />
                     </div>
                     <p className="my-0 text-danger">
@@ -50,7 +75,7 @@ const ProfileEdit = () => {
                     </p>
                   </div>
                   <div className="col-md-6 col-12">
-                    <label htmlFor="email">Contraseña:</label>
+                    <label htmlFor="password">Contraseña:</label>
                     <div className="input-group flex-nowrap">
                       <span className="input-group-text">
                         <i className="bx bx-lock-open bx-sm"></i>
@@ -59,7 +84,9 @@ const ProfileEdit = () => {
                         className="form-control"
                         type="password"
                         placeholder="*********"
-                        {...editUserRegister("password")}
+                        id="password"
+                        name="password"
+                        onChange={handleChangeInput}
                       />
                     </div>
                     <p className="my-0 text-danger">
@@ -77,7 +104,10 @@ const ProfileEdit = () => {
                         className="form-control"
                         type="text"
                         placeholder="Nombres"
-                        {...editUserRegister("firstName")}
+                        id="firstName"
+                        name="firstName"
+                        value={dataCurrentUser.firstName || ""}
+                        onChange={handleChangeInput}
                       />
                     </div>
                     <p className="my-0 text-danger">
@@ -94,7 +124,10 @@ const ProfileEdit = () => {
                         className="form-control"
                         type="text"
                         placeholder="Apellidos"
-                        {...editUserRegister("lastName")}
+                        id="lastName"
+                        name="lastName"
+                        value={dataCurrentUser.lastName || ""}
+                        onChange={handleChangeInput}
                       />
                     </div>
                     <p className="my-0 text-danger">
@@ -112,7 +145,10 @@ const ProfileEdit = () => {
                         className="form-control"
                         type="text"
                         placeholder="000000000"
-                        {...editUserRegister("phone")}
+                        id="phone"
+                        name="phone"
+                        value={dataCurrentUser.phone || ""}
+                        onChange={handleChangeInput}
                       />
                     </div>
                     <p className="my-0 text-danger">

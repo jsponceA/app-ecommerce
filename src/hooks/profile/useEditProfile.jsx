@@ -17,15 +17,12 @@ const schemaEditUser = yup.object().shape({
 
 const useEditProfile = () => {
   const dispatch = useDispatch();
-
-  const {
-    register: editUserRegister,
-    handleSubmit: editUserHandleSubmit,
-    formState: { errors: editUserErrors },
-  } = useForm({
-    resolver: yupResolver(schemaEditUser),
-  });
-
+  const { register: editUserRegister, handleSubmit: editUserHandleSubmit } =
+    useForm({
+      resolver: yupResolver(schemaEditUser),
+    });
+  const [dataCurrentUser, setDataCurrentUser] = useState({});
+  const [editUserErrors, setEditUserErrors] = useState({});
   const [loaderInitialDataEditUser, setLoaderInitialDataEditUser] =
     useState(false);
   const [loaderResponseEditUser, setLoaderResponseEditUser] = useState(false);
@@ -34,28 +31,34 @@ const useEditProfile = () => {
     try {
       setLoaderInitialDataEditUser(true);
       const responseEditUser = await getLoggedUser();
-      const userData = await responseEditUser.data;
-      console.log(
-        schemaEditUser.validateSyncAt("firstName", userData.firstName)
-      );
-
-      console.log(userData.firstName);
+      setDataCurrentUser(responseEditUser.data);
     } catch (error) {
-      console.log(error);
       toast.error(error.response?.data?.error);
     } finally {
       setLoaderInitialDataEditUser(false);
     }
   };
 
-  const handleEditUser = async (dataForm) => {
+  const handleEditUser = async () => {
     try {
       setLoaderResponseEditUser(true);
-      const responseEditUser = await updateUser(dataForm);
-      const { user } = responseEditUser.data;
-      dispatch(setUser(user));
+      schemaEditUser.validateSync(dataCurrentUser, { abortEarly: false });
+      const responseEditUser = await updateUser(
+        dataCurrentUser.id,
+        dataCurrentUser
+      );
+
+      dispatch(setUser(responseEditUser.data));
       toast.success("Sus datos se actualizaron de manera satisfactoria");
     } catch (error) {
+      if (error instanceof yup.ValidationError) {
+        const validationErrors = {};
+        error.inner.forEach((err) => {
+          validationErrors[err.path] = { message: err.message };
+        });
+        setEditUserErrors(validationErrors);
+      }
+
       toast.error(error.response?.data?.error);
     } finally {
       setLoaderResponseEditUser(false);
@@ -65,11 +68,14 @@ const useEditProfile = () => {
   return {
     editUserRegister,
     editUserHandleSubmit,
+    setEditUserErrors,
     editUserErrors,
     initialDataEditUser,
     loaderInitialDataEditUser,
     loaderResponseEditUser,
     handleEditUser,
+    dataCurrentUser,
+    setDataCurrentUser,
   };
 };
 

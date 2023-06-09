@@ -15,8 +15,8 @@ const getLoggedUser = async () => {
   return response;
 };
 
-const updateUser = async (id) => {
-  const response = await axiosSecure.put(`/users/${id}`);
+const updateUser = async (id, data) => {
+  const response = await axiosSecure.put(`/users/${id}`, data);
   return response;
 };
 

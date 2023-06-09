@@ -6,6 +6,8 @@ import AuthLogin from "../pages/auth/Login";
 import AuthRegister from "../pages/auth/Register";
 import CartIndex from "../pages/cart/Index";
 import ProfileEdit from "../pages/profile/Edit";
+import ProductShow from "../pages/product/Show";
+import PurchaseIndex from "../pages/purchase/Index";
 
 const routes = createBrowserRouter([
   {
@@ -31,6 +33,14 @@ const routes = createBrowserRouter([
       {
         path: "mi-profile",
         element: <ProtectedRoute element={ProfileEdit} />,
+      },
+      {
+        path: "product/:id",
+        element: <ProtectedRoute element={ProductShow} />,
+      },
+      {
+        path: "purchases",
+        element: <ProtectedRoute element={PurchaseIndex} />,
       },
     ],
   },
