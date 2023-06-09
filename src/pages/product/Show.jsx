@@ -1,12 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import CardProduct from "../../components/cart/CardProduct";
 import useProduct from "../../hooks/product/useProduct";
+import useCart from "../../hooks/cart/useCart";
+import { toast } from "react-toastify";
 
 const ProductShow = () => {
   const { id } = useParams();
   const { getProductById, product, products, getListProductsRelation } =
     useProduct();
+
+  const { addNewProductCart } = useCart();
+
+  const [qty, setQty] = useState(1);
+
+  const handleQtyItemCart = (e, action) => {
+    e.preventDefault();
+
+    if (action === "add") {
+      setQty(qty + 1);
+    }
+
+    if (action === "minus") {
+      if (qty <= 1) {
+        toast.error("No es posible comprar comprar esa cantidad");
+        return;
+      }
+
+      setQty(qty - 1);
+    }
+  };
 
   useEffect(() => {
     getProductById(id);
@@ -108,7 +131,11 @@ const ProductShow = () => {
             <div className="mx-auto">
               <label htmlFor="">Cantidad</label>
               <div className="input-group input-group-sm">
-                <button className="btn btn-outline-danger" type="button">
+                <button
+                  onClick={(e) => handleQtyItemCart(e, "add")}
+                  className="btn btn-outline-success"
+                  type="button"
+                >
                   <i className="bx bx-plus"></i>
                 </button>
                 <input
@@ -116,16 +143,25 @@ const ProductShow = () => {
                   className="form-control"
                   style={{ width: "80px" }}
                   placeholder="#"
+                  value={qty}
                   disabled
                 />
-                <button className="btn btn-outline-success " type="button">
+                <button
+                  onClick={(e) => handleQtyItemCart(e, "minus")}
+                  className="btn btn-outline-danger "
+                  type="button"
+                >
                   <i className="bx bx-minus"></i>
                 </button>
               </div>
             </div>
           </div>
           <div className="d-grid mt-4">
-            <button type="button" className="btn btn-orange">
+            <button
+              onClick={(e) => addNewProductCart(id, qty)}
+              type="button"
+              className="btn btn-orange"
+            >
               <i className="bx bx-cart-add"></i> AGREGAR AL CARRITO
             </button>
           </div>

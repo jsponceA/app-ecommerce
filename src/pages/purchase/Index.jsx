@@ -1,5 +1,13 @@
 import { Link } from "react-router-dom";
-const PurchaseIndex = (props) => {
+import usePruchase from "../../hooks/purchase/usePurchase";
+import { useEffect } from "react";
+const PurchaseIndex = () => {
+  const { pruchases, loaderPurchases, getListPurchases } = usePruchase();
+
+  useEffect(() => {
+    getListPurchases();
+  }, []);
+
   return (
     <div className="container">
       <div className="row">
@@ -22,32 +30,46 @@ const PurchaseIndex = (props) => {
         </div>
       </div>
       <div className="row">
-        {Array(10)
-          .fill(0)
-          .map((item, index) => (
-            <div key={index} className="col-md-12 ">
-              <div className="d-flex flex-wrap justify-content-evenly align-items-center">
+        {pruchases.map((purchase) => (
+          <div key={purchase.id} className="col-md-12 ">
+            <div className="d-flex flex-wrap justify-content-between align-items-center">
+              <Link
+                to={`/product/${purchase.product?.id}`}
+                className="text-decoration-none"
+              >
                 <img
                   className="table-pruchase-item-img"
-                  src="https://e-commerce-api-v2.academlo.tech/uploads/b.jpg"
+                  src={purchase.product?.images?.[0]?.url || ""}
                   alt=""
                 />
-                <p>Samsgung Galaxy S22</p>
-                <p className="text-secondary">05/12/2023</p>
-                <input
-                  type="text"
-                  disabled
-                  style={{ width: "80px" }}
-                  className="form-control form-control-sm mb-3"
-                />
-                <p className="fw-bold">$. 885.00</p>
-              </div>
-              <hr className="border-secondary-subtle" />
+              </Link>
+              <p style={{ maxWidth: "200px" }}>
+                <Link
+                  to={`/product/${purchase.product?.id}`}
+                  className="text-decoration-none link-secondary"
+                >
+                  {purchase.product?.title}
+                </Link>
+              </p>
+              <p className="text-secondary ">
+                {purchase.product?.createdAt.split("T")[0]}
+              </p>
+              <input
+                type="text"
+                disabled
+                value={purchase.quantity}
+                style={{ width: "80px" }}
+                className="form-control form-control-sm mb-3"
+              />
+              <p className="fw-bold">
+                $ {purchase.quantity * purchase.product?.price}
+              </p>
             </div>
-          ))}
+            <hr className="border-secondary-subtle" />
+          </div>
+        ))}
       </div>
     </div>
   );
 };
-
 export default PurchaseIndex;

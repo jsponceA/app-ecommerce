@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import useCart from "../../hooks/cart/useCart";
 
 const CardProduct = ({ product }) => {
+  const { addNewProductCart } = useCart();
   return (
     <>
       <Link to={`/product/${product.id}`} className="text-decoration-none">
@@ -21,7 +23,13 @@ const CardProduct = ({ product }) => {
             <p className="fw-bold text-secondary mb-0">PRECIO</p>
             <p className="fw-bold ms-3 mb-0">$ {product.price}</p>
             <div className="text-end">
-              <button className="btn btn-orange btn-lg rounded-circle ">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  addNewProductCart(product.id);
+                }}
+                className="btn btn-orange btn-lg rounded-circle "
+              >
                 <i className="bx bx-cart-add"></i>
               </button>
             </div>

@@ -1,9 +1,7 @@
 import { axiosInstance, axiosSecure } from "../../plugins/axios";
 
 const getPurchases = async () => {
-  const response = await axiosSecure.get("/purchases", {
-    params,
-  });
+  const response = await axiosSecure.get("/purchases");
   return response;
 };
 
