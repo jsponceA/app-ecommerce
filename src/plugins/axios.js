@@ -23,9 +23,9 @@ axiosSecure.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response?.status === 403) {
+    /* if (error.response?.status === 403) {
       window.location.href = "/login";
-    }
+    }*/
     return Promise.reject(error);
   }
 );

@@ -2,10 +2,12 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { getCart, addCart, deleteCart, updateCart } from "../../services/cart";
 import { purchaseCart } from "../../services/purchase";
+import { useNavigate } from "react-router-dom";
 
 const useCart = () => {
   const [cartProducts, setCartProducts] = useState([]);
   const [loaderCart, setLoaderCart] = useState(false);
+  const navigate = useNavigate();
 
   const getListCart = async () => {
     try {
@@ -27,6 +29,10 @@ const useCart = () => {
       toast.success("Producto agregado al carrito");
     } catch (error) {
       toast.error(error.response?.data?.error);
+
+      if (error.response?.status === 403) {
+        navigate("/login");
+      }
     } finally {
       setLoaderCart(false);
     }
